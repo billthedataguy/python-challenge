@@ -25,9 +25,7 @@ with open(csvpath, "r", encoding="utf") as csvfile:
     total_votes = len(candidate_list)
 
     candidate_set = set(candidate_list)
-    
-        # print(f"Total votes: {total_votes}")
-
+            
     election_data_dict = {}
 
         # iterate over candidates sorted alphabetical by first name
@@ -39,19 +37,20 @@ with open(csvpath, "r", encoding="utf") as csvfile:
         
         election_data_dict[candidate_name] = [candidate_percent_won, candidate_vote_total]
 
+        # cast dict.values() as list 
+    
     percent_won_list = list(election_data_dict.values())
     
     winner_candidate = ""
 
+        # find winner
+
     for k,v in election_data_dict.items():
         
         if v == max(percent_won_list):
-            winner_candidate = k
-                                   
-            # print(k, v)
-             
-        # print(election_data_dict)
 
+            winner_candidate = k                               
+         
         # Print summary results to terminal
 
     print(f"Election Results")
@@ -89,6 +88,7 @@ with open(csvpath, "r", encoding="utf") as csvfile:
         txtfile.write(f"-------------------------\n")
         
             # total_votes = length of candidate_list
+
         txtfile.write(f"Total Votes: {total_votes}\n")
         txtfile.write(f"-------------------------\n")
 
@@ -97,6 +97,7 @@ with open(csvpath, "r", encoding="utf") as csvfile:
             # percent_won = (candidate_vote_total / total_votes) * 100
     
         for candidate,(percent_won, candidate_vote_total) in election_data_dict.items():
+
             txtfile.write(f"{candidate}: {percent_won}% ({candidate_vote_total})\n")
                  
         txtfile.write(f"-------------------------\n")
