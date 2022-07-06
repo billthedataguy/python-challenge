@@ -26,65 +26,59 @@ with open(csvpath, "r", encoding="utf") as csvfile:
 
     candidate_set = set(candidate_list)
     
-    # print(f"Total votes: {total_votes}")
+        # print(f"Total votes: {total_votes}")
 
     election_data_dict = {}
-    winner_flag = False
-    
-    for candidate_name in candidate_set:
+
+        # iterate over candidates sorted alphabetical by first name
+
+    for candidate_name in sorted(candidate_set):
 
         candidate_vote_total = candidate_list.count(candidate_name)
-        candidate_percent_won = (candidate_vote_total / total_votes) * 100
+        candidate_percent_won = round((candidate_vote_total / total_votes) * 100, 3)
         
-        election_data_dict[candidate_name] = (candidate_percent_won, candidate_vote_total, winner_flag == False)
+        election_data_dict[candidate_name] = [candidate_percent_won, candidate_vote_total]
 
     percent_won_list = list(election_data_dict.values())
     
-    # print(election_data_dict.keys())
-    # print(election_data_dict.values())
-    # print(election_data_dict.items())
-    # print(percent_won_list)
-    # print(sorted(percent_won_list))
-    # print(percent_won_list[0])
-    # print([k for k,v in election_data_dict.items() if v == max(percent_won_list)][0])
-
+    winner_candidate = ""
 
     for k,v in election_data_dict.items():
         
         if v == max(percent_won_list):
             winner_candidate = k
-                       
+                                   
             # print(k, v)
-    
-    election_data_dict[winner_candidate]["winner_flag"] = True
-    
-    print(election_data_dict)
+             
+        # print(election_data_dict)
 
-    # Print summary results to terminal
+        # Print summary results to terminal
 
     print(f"Election Results")
     print(f"-------------------------")
-    # total_votes = length of candidate_list
+
+        # total_votes = length of candidate_list
+
     print(f"Total Votes: {total_votes}")       
     print(f"-------------------------")
 
-    # get list of distinct candidate names (use set(candidate_list))
-    # candidate_vote_total = count the number of rows in candidate_list for each distinct candidate name
-    # percent_won = (candidate_vote_total / total_votes) * 100
+        # get list of distinct candidate names (use set(candidate_list))
+        # candidate_vote_total = count the number of rows in candidate_list for each distinct candidate name
+        # percent_won = (candidate_vote_total / total_votes) * 100
     
-    for candidate,(percent_won,candidate_vote_total) in election_data_dict.items():
+    for candidate, (percent_won, candidate_vote_total) in election_data_dict.items():
+        
         print(f"{candidate}: {percent_won}% ({candidate_vote_total})")
-    
+
+        # print winner_candidate value (also stored in election_data_dict["Winner"])  
+         
     print(f"-------------------------")
-
-    # winner = candidate name corresponding to max(percent_won) 
-
     print(f"Winner: {winner_candidate}")
     print(f"-------------------------")
-    
-    # Print summary results to txt file
+           
+        # Print summary results to txt file
 
-    # Relative filepath for txt file (need \n at end of each line for txtfile)
+        # Relative filepath for txt file (need \n at end of each line for txtfile)
 
     
     txtpath = os.path.join("analysis", "election_data_csv_analysis.txt")
@@ -102,12 +96,12 @@ with open(csvpath, "r", encoding="utf") as csvfile:
             # candidate_vote_total = count the number of rows in candidate_list for each distinct candidate name
             # percent_won = (candidate_vote_total / total_votes) * 100
     
-        for candidate,(percent_won,candidate_vote_total) in election_data_dict.items():
+        for candidate,(percent_won, candidate_vote_total) in election_data_dict.items():
             txtfile.write(f"{candidate}: {percent_won}% ({candidate_vote_total})\n")
-        
+                 
         txtfile.write(f"-------------------------\n")
 
-            # winner = candidate name corresponding to max(percent_won) 
+            # print winner_candidate value (also stored in election_data_dict["Winner"])  
 
         txtfile.write(f"Winner: {winner_candidate}\n")
         txtfile.write(f"-------------------------\n")
@@ -142,7 +136,7 @@ f"-------------------------"
 
     # get list of distinct candidate names (use set(candidate_list))
     # candidate_vote_total = count the number of rows in candidate_list for each distinct candidate name
-    # percent_won = (candidate_vote_total / total_votes) * 100
+    # percent_won = round((candidate_vote_total / total_votes) * 100, 3)
     
 f"{candidate}: {percent_won}% ({candidate_vote_total})"
 f"{candidate}: {percent_won}% ({candidate_vote_total})"
