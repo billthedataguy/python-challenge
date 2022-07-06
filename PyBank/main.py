@@ -109,16 +109,16 @@ Greatest Decrease in Profits: Feb-14 ($-1825558)
 
 '''
 
-f("Financial Analysis")
-f("----------------------------")
-f("Total Months: {total_months}")       # get length of months_list
-f("Total: $ {total_earnings}")          # get sum of earnings_list
-f("Average Change: $ {average_change}") # average of moving average list elements with "window" size = 3
+f"Financial Analysis"
+f"----------------------------"
+f"Total Months: {total_months}"       # get length of months_list
+f"Total: $ {total_earnings}"          # get sum of earnings_list
+f"Average Change: $ {average_change}" # average of moving average list elements with "window" size = 3
 
     # get max of earnings list and fetch corresponding date 
-f("Greatest Increase in Profits: {greatest_increase_profits_date} (${greatest_increase_profits})")  
+f"Greatest Increase in Profits: {greatest_increase_profits_date} (${greatest_increase_profits})"  
 
     # get min of earnings list and fetch corresponding date 
-f("Greatest Decrease in Profits: {greatest_decrease_profits_date} (${greatest_decrease_profits}")   
+f"Greatest Decrease in Profits: {greatest_decrease_profits_date} (${greatest_decrease_profits})"  
 
 '''
