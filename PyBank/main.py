@@ -1,95 +1,99 @@
+# William Vann, Homework #3 PyBank
+
 import csv
 import os
 
-def formatDollarsCents(amount):
-    return (f"${'{:,}'.format(amount)}")
-
+# Relative filepath for csv file 
 csvpath = os.path.join("Resources", "budget_data.csv")
 
 with open(csvpath, "r", encoding="utf") as csvfile:
-
-    # CSV reader specifies delimiter and variable that holds contents
-    csvreader = csv.reader(csvfile, delimiter=',')
     
-    csv_header = next(csvreader)
-    #print(f"CSV Header: {csv_header}")
+    # Advance past header row
+    csvheader = next(csvfile)
 
-    profit_loss_total = 0
+    # <<<Header test>>>:
+    # print(csvheader) 
+
+    csvreader = csv.reader(csvfile, delimiter=",")
+
+    # Initialize list for dates values, list for earnings values
+    dates_list = []
+    earnings_list = []
+
+    # Iterate over rows in csvreader object
+    for row in csvreader:
+
+        # Append values to their respective lists, casting ints for earnings values
+        dates_list.append(row[0])
+        earnings_list.append(int(row[1]))
     
-    average_change = 0
-    greatest_increase_profits = 0
-    greatest_decrease_profits = 0
-    greatest_increase_month_year = ""
-    greatest_decrease_month_year = ""
-    budget_dict = {}
+    # Run calculations and fetch dates
+    total_months = len(dates_list)
+    total_earnings = sum(earnings_list)
+    greatest_increase_profits = max(earnings_list)
+    greatest_decrease_profits = min(earnings_list)
+    greatest_increase_profits_date = dates_list[earnings_list.index(greatest_increase_profits)]
+    greatest_decrease_profits_date = dates_list[earnings_list.index(greatest_decrease_profits)] 
+    
+    # Initialize list for moving averages
+    moving_averages_list = []
 
-    # Read each row of data after the header
-    for i, row in enumerate(csvreader, 1):
-        #print(f"{i} {row}")
-        budget_dict[row[0]] = int(row[1])
+    # Make sure we have correct start and end earning values 
+    start = earnings_list[0]
+    end = earnings_list[len(earnings_list)-1]
 
-profit_loss_total = sum(budget_dict.values())
+    # <<<Start / End Test>>>: 
+    # print(f"Start: {start}")
+    # print(f"End: {end}")
+    
+    # Set moving average window size and initialize counter
+    window_size = 3
+    i = 0
+    
+    # Iterate through all 3 pane "windows" in earnings list
+    # Calculate moving average for each window
+    # Write moving average to moving averages list
 
-greatest_increase_profits = max(budget_dict.values())
-greatest_decrease_profits = min(budget_dict.values())
+    while i < (len(earnings_list) - window_size + 1): 
 
-greatest_increase_month_year = [k for k,v in budget_dict.items() if v == greatest_increase_profits][0]
-greatest_decrease_month_year = [k for k,v in budget_dict.items() if v == greatest_decrease_profits][0]
+        window = earnings_list[i : i + window_size]
+        # print(f"Window {i}:\n [{window[0]}] \n [{window[1]}] \n [{window[2]}]")
+        average = round(sum(window) / window_size, 2)
+        moving_averages_list.append(average)
+        i += 1
+    
+    # Calculate average change of moving averages
+    average_change = round(sum(moving_averages_list) / len(moving_averages_list), 2)
+    
+    # Print summary results to terminal
 
-moving_averages = []
-window_size = 3
-i = 0
-arr = list(budget_dict.values())
-#print(f"ARRAY: {arr}")
-
-while i < len(arr) - window_size + 1:
-
-    window = arr[i : i + window_size]
-    window_average = round(sum(window) / window_size, 0)
-    moving_averages.append(window_average)
-    i += 1
-
-#print(f"MOVING AVERAGES: {moving_averages}")
-
-average_change = round(sum(moving_averages) / len(moving_averages))
-
-txtpath = os.path.join("analysis", "financial_analysis.txt")
-
-with open(txtpath, "w", encoding="utf") as txt_file:
-
-    print("Financial Analysis")
-    txt_file.write("Financial Analysis\n")
+    print(f"Financial Analysis")
     print("----------------------------")
-    txt_file.write("----------------------------\n")
+    print(f"Total Months: {len(dates_list)}")
+    print(f"Total: ${sum(earnings_list)}")
+    print(f"Average Change: ${average_change}")
+    print(f"Greatest Increase in Profits: {greatest_increase_profits_date} (${max(earnings_list)})")
+    print(f"Greatest Decrease in Profits: {greatest_decrease_profits_date} (${min(earnings_list)})")
+    
+    # Print summary results to txt file
 
-    # The total number of months included in the dataset
+    # Relative filepath for txt file (need \n at end of each line for txtfile)
+    txtpath = os.path.join("analysis", "financial_analysis.txt")
+    
+    with open(txtpath, "w", encoding="utf") as txtfile:
+        txtfile.write(f"Financial Analysis\n")
+        txtfile.write("----------------------------\n")
+        txtfile.write(f"Total Months: {len(dates_list)}\n")
+        txtfile.write(f"Total: ${sum(earnings_list)}\n")
+        txtfile.write(f"Average Change: ${average_change}\n")
+        txtfile.write(f"Greatest Increase in Profits: {greatest_increase_profits_date} (${max(earnings_list)})\n")
+        txtfile.write(f"Greatest Decrease in Profits: {greatest_decrease_profits_date} (${min(earnings_list)})\n")
 
-    print(f"Total months: {i}")
-    txt_file.write(f"Total months: {i}\n")
 
-    # The net total amount of "Profit/Losses" over the entire period
 
-    print(f"Total: {formatDollarsCents(profit_loss_total)}")
-    txt_file.write(f"Total: {formatDollarsCents(profit_loss_total)}\n")
-   
-    # The changes in "Profit/Losses" over the entire period, and then the average of those changes
-
-    print(f"Average Change: {formatDollarsCents(average_change)}")
-    txt_file.write(f"Average Change: {formatDollarsCents(average_change)}\n")
-
-    # The greatest increase in profits (date and amount) over the entire period
-
-    print(f"Greatest Increase in Profits: {greatest_increase_month_year} {formatDollarsCents(greatest_increase_profits)}")
-    txt_file.write(f"Greatest Increase in Profits: {greatest_increase_month_year} {formatDollarsCents(greatest_increase_profits)}\n")
-
-    # The greatest decrease in profits (date and amount) over the entire period
-
-    print(f"Greatest Decrease in Profits: {greatest_decrease_month_year} {formatDollarsCents(greatest_decrease_profits)}")
-    txt_file.write(f"Greatest Decrease in Profits: {greatest_decrease_month_year} {formatDollarsCents(greatest_decrease_profits)}\n")
+# DELIVERABLE EXAMPLE:
 
 '''
-
-REPORT: (1) write to terminal and (2) to write to a txt file
 
 Financial Analysis
 ----------------------------
@@ -99,8 +103,22 @@ Average Change: $-8311.11
 Greatest Increase in Profits: Aug-16 ($1862002)
 Greatest Decrease in Profits: Feb-14 ($-1825558)
 
+'''
+
+# DELIVERABLE TEMPLATE:
 
 '''
 
+f("Financial Analysis")
+f("----------------------------")
+f("Total Months: {total_months}")       # get length of months_list
+f("Total: $ {total_earnings}")          # get sum of earnings_list
+f("Average Change: $ {average_change}") # average of moving average list elements with "window" size = 3
 
+    # get max of earnings list and fetch corresponding date 
+f("Greatest Increase in Profits: {greatest_increase_profits_date} (${greatest_increase_profits})")  
 
+    # get min of earnings list and fetch corresponding date 
+f("Greatest Decrease in Profits: {greatest_decrease_profits_date} (${greatest_decrease_profits}")   
+
+'''
