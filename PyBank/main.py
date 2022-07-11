@@ -52,9 +52,10 @@ with open(csvpath, "r", encoding="utf") as csvfile:
     start = earnings_list[0]
     end = earnings_list[len(earnings_list)-1]
 
+
         # <<<Start / End Test>>>: 
-        # print(f"Start: {start}")
-        # print(f"End: {end}")
+    # print(f"Start: {start}")
+    # print(f"End: {end}")
         
         # Set moving average window size and initialize counter
 
@@ -75,6 +76,8 @@ with open(csvpath, "r", encoding="utf") as csvfile:
         i += 1
     
         # Calculate average change of moving averages
+    
+    # print(moving_averages_list)
 
     average_change = round(sum(moving_averages_list) / len(moving_averages_list), 2)
     

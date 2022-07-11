@@ -1,0 +1,8 @@
+
+import csv
+import os
+
+    # Relative filepath for csv file 
+
+csvpath = os.path.join("Resources", "budget_data.csv")
+
